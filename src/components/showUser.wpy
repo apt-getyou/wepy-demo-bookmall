@@ -1,0 +1,96 @@
+<template>
+  <view class="page-user">
+    <view class="weui-panel">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+          <view class="weui-cell__bd userinfo clearfix">
+            <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
+            <view class="userinfo-info">
+              <view class="userinfo-nickname">{{ nickName }}</view>
+              <view class="userinfo-status">{{identity.type}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  import user from '../mixins/user'
+  import base from '../mixins/base'
+
+  export default class ShowUser extends wepy.component {
+    mixins = [base, user]
+    props = {
+      userInfo: {
+        type: Object,
+        default: {
+          nickName: '加载中...',
+          // 头像占位图
+          avatarUrl: '../images/icon/icon-avatar@2x.png',
+          packages: {
+            times: 0,
+            status: '借阅状态'
+          },
+          identity: {
+            type: '订阅状态',
+            collection: 0
+          }
+        },
+        twoWay: true
+      }
+    }
+    computed = {
+      nickName() {
+        const info = this.getObject(this.userInfo)
+        // 名称或头像不为空的，才认为是授权用户
+        return (info.nickName || info.avatarUrl) ? info.nickName : '未授权用户'
+      }
+    }
+    methods = {}
+    components = {}
+  }
+</script>
+
+<style lang="less">
+  @import "../styles/custom/fn.less";
+
+  .page-user{
+
+    @userinfoHeight: 100rpx;
+    @userinfoSpace: 8rpx;
+
+    .userinfo{
+      padding: 20rpx;
+    }
+
+    .userinfo-avatar {
+      float: left;
+      width: @userinfoHeight;
+      height: @userinfoHeight;
+      border-radius: 50%;
+    }
+
+    // space + space
+    .userinfo-info {
+      float: left;
+      line-height: 1;
+      padding: @userinfoSpace 0;
+      margin-left: 3 * @userinfoSpace;
+    }
+
+    // text + space + text
+    .userinfo-nickname {
+      color: @uiColorGreen;
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
+      margin-bottom: 2 * @userinfoSpace;
+    }
+    .userinfo-status {
+      color: #999;
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
+
+    }
+  }
+</style>

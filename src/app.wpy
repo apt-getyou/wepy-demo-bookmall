@@ -3,6 +3,11 @@ import wepy from 'wepy'
 import 'wepy-async-function'
 // import { service } from './config.js'
 
+var ga = require('./ga.js')
+var GoogleAnalytics = ga.GoogleAnalytics
+var HitBuilders = ga.HitBuilders
+
+
 export default class extends wepy.app {
   config = {
     pages: [
@@ -14,6 +19,8 @@ export default class extends wepy.app {
       'pages/borrow',
       'pages/borrow/subscribe',
       'pages/borrow/result',
+
+      'pages/scanning',
 
       'pages/user',
       'pages/user/borrow',
@@ -36,14 +43,14 @@ export default class extends wepy.app {
       borderStyle: 'black',
       list: [{
         pagePath: 'pages/index',
-        selectedIconPath: './images/tabbars/icon-mark-active@2x.png',
-        iconPath: './images/tabbars/icon-mark@2x.png',
-        text: '首页'
-      }, {
-        pagePath: 'pages/borrow',
         selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
         iconPath: './images/tabbars/icon-shelf@2x.png',
-        text: '书架'
+        text: '我的'
+      }, {
+        pagePath: 'pages/scanning',
+        selectedIconPath: './images/tabbars/icon-qr-active.png',
+        iconPath: './images/tabbars/icon-qr.png',
+        text: ''
       }, {
         pagePath: 'pages/user',
         selectedIconPath: './images/tabbars/icon-smile-active@2x.png',
@@ -83,6 +90,19 @@ export default class extends wepy.app {
   }
   isUndefined(item) {
     return typeof item === 'undefined'
+  }
+  // Google analytics
+  getTracker(name, text) {
+    if (!this.globalData.tracker) {
+      // 初始化GoogleAnalytics Tracker
+      this.globalData.tracker = GoogleAnalytics.getInstance(this)
+        .setAppName('友福图书馆')
+        .setAppVersion('v0.4')
+        .newTracker('UA-109097480-1')
+    }
+    var t = this.globalData.tracker
+    t.setScreenName(text)
+    t.send(new HitBuilders.ScreenViewBuilder().build())
   }
 
   /* ========================= 更新缓存信息 ======================== */

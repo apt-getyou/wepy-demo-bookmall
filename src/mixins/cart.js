@@ -33,8 +33,8 @@ export default class cartMixin extends wepy.mixin {
     const list = this.getCartList()
 
     // 根据用户套餐信息处理购物车数量问题
-    this.$getUserInfo(({ packages }) => {      
-      if (this.isDefined( packages )) {
+    this.$getUserInfo(({ packages }) => {
+      if (this.isDefined(packages)) {
         // 解构: 可借数量/次数
         const {quantity, times} = packages
         // 如果没有可借次数
@@ -105,9 +105,9 @@ export default class cartMixin extends wepy.mixin {
 
       this.isFunction(getList) && getList.bind(this)((list) => {
         // 对比去重
-        let existIndex = undefined
+        let existIndex
         if (this.isFunction(isEqual)) {
-          for (var i = list.length - 1; i >= 0; i--) {
+          for (let i = list.length - 1; i >= 0; i--) {
             if (isEqual(list[i].good, tempData.good)) {
               // 取出存在的序号
               existIndex = i
